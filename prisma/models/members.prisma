@@ -1,0 +1,50 @@
+enum MemberStatus {
+  ACTIVE
+  BANNED
+}
+
+model Member {
+  id           String       @id @db.Uuid
+  email        String       @unique
+  location     String?      @db.VarChar(255)
+  displayName  String?      @map("display_name") @db.VarChar(100)
+  bio          String?      @db.Text
+  organization String?      @db.VarChar(255)
+  jobTitle     String?      @map("job_title") @db.VarChar(100)
+  avatarUrl    String?      @map("avatar_url") @db.Text
+  status       MemberStatus @default(ACTIVE)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  providers   MemberProvider[]
+  memberLinks MemberLink[]
+
+  @@map("members")
+}
+
+model MemberProvider {
+  id             String   @id @db.Uuid
+  memberId       String   @map("member_id") @db.Uuid
+  provider       String   @db.VarChar(50) // eg: github, google
+  providerUserId String   @map("provider_user_id") @db.VarChar(255)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@map("member_providers")
+}
+
+model MemberLink {
+  id        String   @id @db.Uuid
+  memberId  String   @map("member_id") @db.Uuid
+  type      String   @db.VarChar(50) // eg: twitter, linkedin
+  url       String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("member_links")
+}
