@@ -3,7 +3,7 @@ import { AuthService } from "./auth.service";
 import type { Response, Request } from "express";
 import { generateState } from "arctic";
 
-@Controller("api/auth")
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
