@@ -63,7 +63,7 @@ export class ActivityService {
   }
 
   // public: get by slug
-  async findOneBySlug(slug: string) {
+  async findOneBySlug(slug: string, lang?: string) {
     const activity = await this.prisma.activity.findUnique({
       where: { slug },
       select: {
@@ -74,6 +74,7 @@ export class ActivityService {
         supportedLanguages: true,
         contents: {
           select: { lang: true, title: true, description: true },
+          where: lang ? { lang: lang.toLowerCase() } : undefined,
         },
       },
     });

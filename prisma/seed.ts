@@ -10,12 +10,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const permissionCodes = [
-    "activity:create",
-    "activity:edit",
-    "activity:delete",
-    "activity:view",
-  ];
+  const permissionCodes = ["activity:manage"];
 
   const permissions = await Promise.all(
     permissionCodes.map((code) =>
